@@ -1,0 +1,25 @@
+@use 'variable' as *;
+
+.bg-gradient-primary {
+    background-image: $gradient-primary;
+}
+.bg-gradient-secondary {
+    background-image: $gradient-secondary;
+}
+.bg-gradient-info {
+    background-image: $gradient-info;
+}
+.bg-gradient-warning {
+    background-image: $gradient-warning;
+}
+.bg-gradient-success {
+    background-image: $gradient-success;
+}
+.bg-gradient-danger {
+    background-image: $gradient-danger;
+}
+
+.fw-xs{
+    font-weight: bold;
+    font-size: 12px;
+}

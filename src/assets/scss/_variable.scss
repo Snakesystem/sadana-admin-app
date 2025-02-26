@@ -2,18 +2,18 @@
 $enable-validation-icons: false;
 $global-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.15);
 
-$primary: #2AF598;
-$secondary: #6c757d;
-$success: #28a745;
-$info: #17a2b8;
-$warning: #ffc107;
-$danger: #dc3545;
+$primary: #0871ea;
+$secondary: #abc7df;
+$success: #0d8f79;
+$info: #2ae8f5; 
+$warning: #ffa807;
+$danger: #e4461e;
 
-$primary-gradient: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
-$secondary-gradient: linear-gradient(90deg, #6c757d 0%, #495057 100%);
-$success-gradient: linear-gradient(90deg, #28a745 0%, #218838 100%);
-$info-gradient: linear-gradient(90deg, #17a2b8 0%, #0d6efd 100%);
-$warning-gradient: linear-gradient(90deg, #ffc107 0%, #ff8500 100%);
-$danger-gradient: linear-gradient(90deg, #dc3545 0%, #b91d1d 100%);
+$gradient-primary: linear-gradient(59deg, #2AF598 0%, #08AEEA 89%);
+$gradient-secondary: linear-gradient(59deg, #ebf4f5 0%, #b5c6e0 89%);
+$gradient-success: linear-gradient(59deg, #5da92f 0%, #0d8f79 89%);
+$gradient-info: linear-gradient(59deg, #918dac 0%, #01dbff 89%);
+$gradient-warning: linear-gradient(59deg, #f7a2a1 0%, #ffed00 89%);
+$gradient-danger: linear-gradient(59deg, #f19e18 0%, #e62314 89%);
 
 @import "bootstrap/scss/bootstrap";

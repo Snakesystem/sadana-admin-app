@@ -24,7 +24,6 @@
     z-index: 1;
     background-color: #2AF598;
     background-image: linear-gradient(59deg, #2AF598 0%, #08AEEA 89%);
-
     height: 10rem;
     z-index: -1;
 
@@ -54,7 +53,7 @@
       }
 
       .navbar-brand {
-          margin-left: 300px;
+          margin-left: 280px;
       }
 
       .navbar-nav {

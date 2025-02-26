@@ -1,5 +1,5 @@
 <script>
-  import { appRoutes, urlHistory } from "@app/app";
+  import { appRoutes, sidebarOpen, urlHistory } from "@app/app";
   import { checkSession } from "@app/auth";
   import { session } from "@app/firebase";
   import { signOut } from "firebase/auth";
@@ -7,16 +7,22 @@
   import { Link, links, useLocation } from "svelte-routing";
 
   const history = useLocation();
+  let sidebar = $state(false);
 
   $effect(() => {
     history.subscribe((value) => {
       urlHistory.set(value.pathname);
+      sidebarOpen.set(false);
+    })
+
+    sidebarOpen.subscribe((value) => {
+      sidebar = value;
     })
   });
 
 </script>
 
-<div class="sidebar">
+<div class="sidebar {sidebar ? '' : 'sidebar-hide'}">
   <div class="card" use:links>
     <a class="nav-brand" href="/">
       <img src="/img/sadana-logo.jpg" alt="logo-sadana" class="img-fluid w-50" />
@@ -69,7 +75,7 @@
           </button>
         </li>
         <li>
-          <button class="btn btn-primary w-100 btn-sm">
+          <button class="btn btn-secondary w-100 btn-sm">
             <i class="bi bi-info-circle"> <span class="mx-2">Abount</span></i>
           </button>
         </li>
@@ -79,6 +85,7 @@
 </div>
 
 <style lang="scss">
+
   .sidebar {
     display: flex;
     justify-content: center;
@@ -89,6 +96,7 @@
     width: 250px;
     height: 100vh;
     z-index: 3;
+    transition: all 0.3s ease-in-out;
 
     a {
       text-decoration: none;
@@ -141,4 +149,11 @@
       }
     }
   }
+
+  @media screen and (max-width: 960px) {
+    .sidebar-hide {
+      left: -250px;
+    }
+  }
+
 </style>

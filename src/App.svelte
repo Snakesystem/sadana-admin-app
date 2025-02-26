@@ -10,17 +10,22 @@
   import Header from "./lib/components/Header.svelte";
   import Sidebar from "@lib/components/Sidebar.svelte";
   import Footer from "@lib/components/Footer.svelte";
-  import { appRoutes, transformTitle, urlHistory } from "@app/app";
+  import { appRoutes, transformTitle, urlHistory, sidebarOpen } from "@app/app";
   import PettyCash from "@lib/pages/PettyCash.svelte";
 
   let auth = $state(false);
   let pathname = $state(location.pathname);
+  let sidebar = $state(false);
 
   const history = urlHistory;
 
   $effect(() => {
     history.subscribe((value) => {
       pathname = value;
+    });
+
+    sidebarOpen.subscribe((value) => {
+      sidebar = value;
     });
   });
 
@@ -68,7 +73,7 @@
     {#if auth}
       <Header/>
       <Sidebar/>
-      <section class="main-content card">
+      <section class="main-content card {sidebar ? '' : 'sidebar-hide'}">
         <Route path={appRoutes.HOME}>
           <Home />
         </Route>
@@ -89,15 +94,41 @@
     <Route path="*" >
       <Notfound />
     </Route>
+    <button onclick={() => $sidebarOpen = !$sidebarOpen} aria-label="Toggle sesttings visibility" type="button" class="settings-btn btn bg-gradient-success rounded-circle text-white d-none"><i class="bi bi-gear"></i></button>
   </main>
 </Router>
 
 <style lang="scss">
+  .main-page {
+    button {
+      width: 50px;
+      height: 50px;
+      position: fixed;
+      right: 1rem;
+      bottom: 2rem;
+      z-index: 999;
+      font-size: 20px;
+    }
+  }
+
   section.main-content {
     position: absolute;
     right: 0.5rem;
     width: calc(100% - 300px);
     height: 90vh;
     top: 4.5rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    transition: all 0.3s ease-in-out;
   }
+
+  @media screen and (max-width: 960px) {
+    section.main-content {
+      width: calc(100% - 1rem);
+    }
+    .settings-btn {
+      display: block !important;
+    }
+  }
+
 </style>

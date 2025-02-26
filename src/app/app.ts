@@ -77,3 +77,46 @@ export function validPassword(node: HTMLInputElement) {
     },
   };
 }
+
+export function validNumber(node: HTMLInputElement) {
+  const errorMessage = document.createElement("div");
+  errorMessage.className = "invalid-feedback";
+
+  function inputHandler() {
+    if (!/^\d+$/.test(node.value)) {
+      node.classList.add("is-invalid");
+      errorMessage.textContent = "Input harus berupa angka!";
+      node.parentNode?.appendChild(errorMessage);
+    } else {
+      node.classList.remove("is-invalid");
+      errorMessage.textContent = "";
+    }
+  }
+
+  node.addEventListener("input", inputHandler);
+
+  return {
+    destroy() {
+      node.removeEventListener("input", inputHandler);
+      errorMessage.remove();
+    },
+  };
+}
+
+export const formatRupiah = (value: number, format: "decimal-2" | "decimal-0" = "decimal-2"): string => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: format === "decimal-0" ? 0 : 2, // Tanpa desimal
+    maximumFractionDigits: format === "decimal-0" ? 0 : 2, // Tanpa desimal
+  }).format(value);
+}
+
+export function formatTimestamp(timestamp: number) {
+  const date = new Date(timestamp * 1000); // Convert from seconds to milliseconds
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+}

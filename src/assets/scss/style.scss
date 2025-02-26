@@ -1,4 +1,5 @@
 @use 'variable' as *;
+@use 'dynamic-class' as *;
 
 * {
     margin: 0;
@@ -78,4 +79,37 @@ a {
     i {
       color: #fff;
     }
+}
+
+.table-wrapper {
+    max-height: 400px; // Sesuaikan tinggi max table
+    overflow: auto; // Auto-scroll jika perlu
+    border: 1px solid #ddd;
   }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  
+    th, td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+  
+    thead {
+      background: #f8f8f8;
+      position: sticky;
+      top: 0; // Sticky header saat scroll
+      white-space: nowrap;
+    }
+
+    tbody {
+      white-space: nowrap;
+      font-size: 0.8rem;
+      td {
+        text-align: end;
+        margin: 0;
+      }
+    }
+}
