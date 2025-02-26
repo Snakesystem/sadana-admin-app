@@ -95,8 +95,9 @@
 <style lang="scss">
   section.main-content {
     position: absolute;
-    right: 0;
-    width: calc(100% - 250px);
-    height: 100vh;
+    right: 0.5rem;
+    width: calc(100% - 300px);
+    height: 90vh;
+    top: 4.5rem;
   }
 </style>

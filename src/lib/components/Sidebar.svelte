@@ -44,7 +44,7 @@
       <ul>
         <li class="{$urlHistory === appRoutes.PROFIL ? 'active' : ''}"><a href={appRoutes.PROFIL}><i class="bi bi-person-check me-2"></i>Profil</a></li>
         <li>
-          <button
+          <button class="btn text-danger"
             onclick={async () => {
               await signOut(session);
               Cookies.remove("token");
@@ -60,12 +60,17 @@
       <ul class="w-100">
         <li class="mb-2">
           <button class="btn btn-success w-100 btn-sm">
-            <i class="bi bi-whatsapp"><span> WhatsApp</span></i>
+            <i class="bi bi-whatsapp"><span class="mx-2"> WhatsApp</span></i>
           </button>
         </li>
         <li>
           <button class="btn btn-primary w-100 btn-sm">
-            <i class="bi bi-envelope"> <span>Email</span></i>
+            <i class="bi bi-envelope"> <span class="mx-2">Email</span></i>
+          </button>
+        </li>
+        <li>
+          <button class="btn btn-primary w-100 btn-sm">
+            <i class="bi bi-info-circle"> <span class="mx-2">Abount</span></i>
           </button>
         </li>
       </ul>
@@ -81,7 +86,7 @@
     text-align: center;
     position: fixed;
     left: 1.5rem;
-    width: 200px;
+    width: 250px;
     height: 100vh;
     z-index: 3;
 
@@ -91,7 +96,7 @@
     }
 
     .card {
-      height: 90vh;
+      height: 95vh;
       border: none;
       padding: 10px;
 
@@ -116,6 +121,21 @@
           li {
             // margin: 10px 0;
             padding: 5px 2rem;
+          }
+        }
+
+        &.need-help {
+          width: 100%;
+          margin: auto;
+          position: inherit;
+          bottom: 0;
+        }
+
+        &.need-help {
+          ul, li {
+            i {
+              font-style: normal;
+            }
           }
         }
       }

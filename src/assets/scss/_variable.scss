@@ -2,4 +2,18 @@
 $enable-validation-icons: false;
 $global-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.15);
 
+$primary: #2AF598;
+$secondary: #6c757d;
+$success: #28a745;
+$info: #17a2b8;
+$warning: #ffc107;
+$danger: #dc3545;
+
+$primary-gradient: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+$secondary-gradient: linear-gradient(90deg, #6c757d 0%, #495057 100%);
+$success-gradient: linear-gradient(90deg, #28a745 0%, #218838 100%);
+$info-gradient: linear-gradient(90deg, #17a2b8 0%, #0d6efd 100%);
+$warning-gradient: linear-gradient(90deg, #ffc107 0%, #ff8500 100%);
+$danger-gradient: linear-gradient(90deg, #dc3545 0%, #b91d1d 100%);
+
 @import "bootstrap/scss/bootstrap";

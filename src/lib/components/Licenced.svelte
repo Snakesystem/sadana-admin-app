@@ -22,7 +22,6 @@
         .snakesystem {
             margin: 1rem 0;
             width: 100%;
-            // background-color: salmon;
             display: flex;
             align-items: center;
             justify-content: center;

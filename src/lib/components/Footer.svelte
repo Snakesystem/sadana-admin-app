@@ -1,7 +1,5 @@
 <div class="footer">
-    <div class="d-flex justify-content-between">
-        <span>Copyright &copy; 2023</span>
-        <span>Version 1.0.0</span>
+    <div class="d-flex">
     </div>
 </div>
 
@@ -11,8 +9,14 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        background-color: #333;
-        color: #fff;
+        /* background-color: #333; */
+        /* color: #fff; */
         padding: 10px;
+
+        .d-flex {
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
     }
 </style>
