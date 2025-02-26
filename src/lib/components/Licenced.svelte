@@ -8,16 +8,16 @@
             <img src="/img/logo-snakesystem.jpg" alt="logo-ss">
             <span>Snakesystem</span>
         </div>
-        <div class="d-flex justify-content-center gap-3">
-            <Link to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-instagram"></i></Link>
-            <Link to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-facebook"></i></Link>
-            <Link to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-linkedin"></i></Link>
-            <Link to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-github"></i></Link>
+        <div class="d-flex justify-content-center medsos gap-3">
+            <Link class="link-medsos" to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-instagram"></i></Link>
+            <Link class="link-medsos" to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-facebook"></i></Link>
+            <Link class="link-medsos" to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-linkedin"></i></Link>
+            <Link class="link-medsos" to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-github"></i></Link>
         </div>
     </div>
 </div>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .licenced {
         .snakesystem {
             margin: 1rem 0;
@@ -30,10 +30,33 @@
             img {
                 width: 20px;
                 border-radius: 50%;
+                margin: 5px;
             }
 
             span {
                 font-size: 1rem;
+            }
+        }
+        
+        .medsos {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1.2rem;
+
+            .bi-instagram {
+                color: #E1306C;
+            }
+
+            .bi-facebook {
+                color: #1877F2;
+            }
+
+            .bi-linkedin {
+                color: #0A66C2;
+            }
+
+            .bi-github {
+                color: #202020;
             }
         }
     }

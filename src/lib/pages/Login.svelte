@@ -1,11 +1,12 @@
 <script lang="ts">
     import { signInWithEmailAndPassword } from "firebase/auth";
-    import { validEmail, validPassword } from "../../app/app";
-    import { session } from "../../app/firebase";
-    import { navigate } from "svelte-routing";
+    import { urlHistory, validEmail, validPassword } from "@app/app";
+    import { session } from "@app/firebase";
+    import { navigate, useLocation } from "svelte-routing";
     import Cookies from "js-cookie";
-    import { checkSession } from "../../app/auth";
+    import { checkSession } from "@app/auth";
     import { Carousel, CarouselItem } from "@sveltestrap/sveltestrap";
+  import Licenced from "@lib/components/Licenced.svelte";
 
     let formData = $state({ email: "", password: "" });
     let showPassword = $state(false);
@@ -21,6 +22,14 @@
       });
     }
 
+    const history = useLocation();
+
+    $effect(() => {
+      history.subscribe((value) => {
+        urlHistory.set(value.pathname);
+      })
+    });
+
     const items = [
       '/img/bg-1.jpg',
       '/img/bg-2.jpg',
@@ -33,20 +42,23 @@
 <section class="login-page">
   <div class="container">
     <div class="card">
-      <h3>Login Page</h3>
+      <div class="company">
+        <img src="/img/sadana-logo.jpg" alt="logo-sadana"/>
+        <p>Sadana Administration Area</p>
+      </div>
       <form onsubmit={(e) => {
           e.preventDefault();
           login(formData);
         }}>
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-column align-items-center input-group-sm">
           <label for="email" class="form-label">Email</label>
-          <input id="email" autocomplete="off" type="email" class="form-control" bind:value={formData.email} use:validEmail required />
+          <input id="email" autocomplete="off" type="email" class="form-control text-center" bind:value={formData.email} use:validEmail required />
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 d-flex flex-column align-items-center input-group-sm">
           <label for="email" class="form-label">Password</label>
           <div class="input-group password">
-            <input id="email" type={showPassword ? "text" : "password"} class="form-control" bind:value={formData.password} use:validPassword required />
+            <input id="email" type={showPassword ? "text" : "password"} class="form-control text-center" bind:value={formData.password} use:validPassword required />
             <button aria-label="Toggle password visibility" type="button" class="btn" onclick={() => showPassword = !showPassword} >
               <i class="bi" class:bi-eye={!showPassword} class:bi-eye-slash={showPassword} ></i>
             </button>
@@ -55,6 +67,7 @@
 
         <button type="submit" class="btn btn-primary w-100">Login</button>
       </form>
+      <Licenced/>
     </div>
   </div>
   <Carousel {items} bind:activeIndex>
@@ -101,5 +114,16 @@
     height: 50vh;
     background-color: rgba(120, 122, 253, 0.3);
     z-index: -1;
+  }
+
+  .company {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    img {
+      width: 40%;
+    }
   }
 </style>

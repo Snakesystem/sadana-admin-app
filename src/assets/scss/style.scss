@@ -7,6 +7,10 @@
     font-family: 'Poppins', sans-serif;
 }
 
+input {
+    height: 35px;
+}
+
 .input-group.password {
     position: relative;
     button {
@@ -31,3 +35,46 @@
         }
     }
 }
+
+.link-medsos {
+    background-color: white;
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px 1px;
+
+    &:hover {
+        background-color: #fff;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px 1px;
+    }
+}
+
+.card {
+    box-shadow: $global-box-shadow;
+    border: none;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+.active {
+    background-color: #333;
+    border-radius: 5px;
+
+    a {
+      color: #fff !important;
+    }
+
+    i {
+      color: #fff;
+    }
+  }

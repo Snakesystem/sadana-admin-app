@@ -1,8 +1,31 @@
 import Cookies from "js-cookie";
+import { writable } from "svelte/store";
 
 export function getToken(): string | undefined {
   return Cookies.get("token");
 }
+
+export const appRoutes = {
+  HOME: '/',
+  LOGIN: '/login',
+  INVENTORY: '/inventory',
+  PETTYCASH: '/pettycash',
+  PESANAN: '/pesanan',
+  CONTACT: '/contact',
+  PROFIL: '/profile',
+  UNKNOW: '*',
+}
+
+export const transformTitle = (route: string): string => {
+  return route
+    .replace(/^\//, "") // Menghilangkan '/' di awal
+    .split("/") // Membagi path di setiap '/'
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize
+    .join(" "); // Gabung kembali dengan spasi
+};
+
+export const sidebarOpen = writable(false);
+export const urlHistory = writable("");
 
 export function validEmail(node: HTMLInputElement) {
   const errorMessage = document.createElement("div");

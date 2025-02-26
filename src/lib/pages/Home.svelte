@@ -1,1 +1,3 @@
-<h1>Home page</h1>
+<div class="page">
+    <h1>Home</h1>
+</div>

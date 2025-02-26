@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Route, Router, navigate } from "svelte-routing";
+  import { Route, Router, navigate, useLocation } from "svelte-routing";
   import Home from "./lib/pages/Home.svelte";
   import Login from "./lib/pages/Login.svelte";
   import Pesanan from "./lib/pages/Pesanan.svelte";
@@ -8,14 +8,31 @@
   import Notfound from "./lib/pages/Notfound.svelte";
   import { checkSession, isAuthenticated } from "./app/auth";
   import Header from "./lib/components/Header.svelte";
+  import Sidebar from "@lib/components/Sidebar.svelte";
+  import Footer from "@lib/components/Footer.svelte";
+  import { appRoutes, transformTitle, urlHistory } from "@app/app";
+  import PettyCash from "@lib/pages/PettyCash.svelte";
 
   let auth = $state(false);
+  let pathname = $state(location.pathname);
+
+  const history = urlHistory;
+
+  $effect(() => {
+    history.subscribe((value) => {
+      pathname = value;
+    });
+  });
 
   $effect(() => {
     checkSession();
     isAuthenticated.subscribe((value) => {
       auth = value;
     });
+
+    document.title = `${
+      pathname === "/" ? "Home" : transformTitle(pathname)
+    } - Sadana Admin Area`;
   });
 
   // Redirect jika user login & masuk ke halaman login/register
@@ -25,7 +42,7 @@
 
   // Redirect jika user belum login & masuk ke halaman yang butuh login
   $effect(() => {
-    if (!auth && !["/login", "/register", "/contact"].includes(window.location.pathname)) {
+    if (!auth && !["/login", "/register", "/contact"].includes(pathname)) {
       navigate("/login", { replace: true });
     }
   });
@@ -35,10 +52,10 @@
 <Router>
   <main class="main-page">
     <!-- Halaman Public -->
-    <Route path="/contact" >
+    <Route path={appRoutes.CONTACT} >
       <Contact />
     </Route>
-    <Route path="/login">
+    <Route path={appRoutes.LOGIN}>
       {redirectPublic()}
       <Login />
     </Route>
@@ -50,15 +67,22 @@
     <!-- Halaman Private -->
     {#if auth}
       <Header/>
-      <Route path="/">
-        <Home />
-      </Route>
-      <Route path="/pesanan" >
-        <Pesanan />
-      </Route>
-      <Route path="/inventory">
-        <Inventory />
-      </Route>
+      <Sidebar/>
+      <section class="main-content card">
+        <Route path={appRoutes.HOME}>
+          <Home />
+        </Route>
+        <Route path={appRoutes.PESANAN} >
+          <Pesanan />
+        </Route>
+        <Route path={appRoutes.INVENTORY}>
+          <Inventory />
+        </Route>
+        <Route path={appRoutes.PETTYCASH}>
+          <PettyCash />
+        </Route>
+        <Footer/>
+      </section>
     {/if}
 
     <!-- Not Found Page -->
@@ -67,3 +91,12 @@
     </Route>
   </main>
 </Router>
+
+<style lang="scss">
+  section.main-content {
+    position: absolute;
+    right: 0;
+    width: calc(100% - 250px);
+    height: 100vh;
+  }
+</style>
