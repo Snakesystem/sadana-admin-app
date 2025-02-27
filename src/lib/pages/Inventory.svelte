@@ -2,7 +2,7 @@
   import { formatRupiah, formatTimestamp } from "@app/app";
   import { openModal } from "@app/context";
   import { retrieveData } from "@app/firebase";
-  import ModalChange from "@lib/components/ModalChange.svelte";
+  import ModalChange from "@lib/modals/ModalChange.svelte";
   import ModalContainer from "@lib/components/ModalContainer.svelte";
 
     let kitchens = $state<any>([]);

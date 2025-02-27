@@ -1,6 +1,7 @@
 <script>
   import { appRoutes, sidebarOpen, urlHistory } from "@app/app";
   import { checkSession } from "@app/auth";
+  import { openModal } from "@app/context";
   import { session } from "@app/firebase";
   import { signOut } from "firebase/auth";
   import Cookies from "js-cookie";
@@ -75,7 +76,7 @@
           </button>
         </li>
         <li>
-          <button class="btn btn-secondary w-100 btn-sm">
+          <button type="button" class="btn btn-secondary w-100 btn-sm" onclick={() => openModal("about")}>
             <i class="bi bi-info-circle"> <span class="mx-2">Abount</span></i>
           </button>
         </li>

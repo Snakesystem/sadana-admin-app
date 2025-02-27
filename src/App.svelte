@@ -12,6 +12,8 @@
   import Footer from "@lib/components/Footer.svelte";
   import { appRoutes, transformTitle, urlHistory, sidebarOpen } from "@app/app";
   import PettyCash from "@lib/pages/PettyCash.svelte";
+    import ModalContainer from "@lib/components/ModalContainer.svelte";
+    import ModalAbount from "@lib/modals/ModalAbount.svelte";
 
   let auth = $state(false);
   let pathname = $state(location.pathname);
@@ -95,6 +97,9 @@
       <Notfound />
     </Route>
     <button onclick={() => $sidebarOpen = !$sidebarOpen} aria-label="Toggle sesttings visibility" type="button" class="settings-btn btn bg-gradient-success rounded-circle text-white d-none"><i class="bi bi-gear"></i></button>
+    <ModalContainer id="about" title="Tentang Aplikasi" size="xl">
+      <ModalAbount/>
+    </ModalContainer>
   </main>
 </Router>
 
