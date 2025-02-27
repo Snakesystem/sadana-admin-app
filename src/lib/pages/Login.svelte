@@ -1,25 +1,58 @@
 <script lang="ts">
     import { signInWithEmailAndPassword } from "firebase/auth";
     import { urlHistory, validEmail, validPassword } from "@app/app";
-    import { session } from "@app/firebase";
+    import { retrieveData, session } from "@app/firebase";
     import { navigate, useLocation } from "svelte-routing";
     import Cookies from "js-cookie";
     import { checkSession } from "@app/auth";
     import { Carousel, CarouselItem } from "@sveltestrap/sveltestrap";
-  import Licenced from "@lib/components/Licenced.svelte";
+    import Licenced from "@lib/components/Licenced.svelte";
+    import Swal from "sweetalert2";
 
     let formData = $state({ email: "", password: "" });
     let showPassword = $state(false);
+    let user_status = $state<any>([]);
+
+    const fetchUserStatus = async () => {
+        try {
+            const response = await retrieveData("user_status");
+            user_status = response;
+        } catch (error) {
+            console.error("Error fetching kitchen:", error);
+        }
+    }
   
     async function login(data: any) {
-      await signInWithEmailAndPassword(session, data.email, data.password).then(async(response) => {
-        const token = await response.user.getIdToken();
-        Cookies.set("token", token, { expires: 2, secure: true, sameSite: "strict" });
-        checkSession();
-        navigate('/', { replace: true });
-      }).catch((error) => {
-        console.log(error);
-      });
+
+      await fetchUserStatus();
+
+      if(user_status.length > 0) {
+        const active_user = user_status[0]?.active;
+        if(active_user) {
+          await signInWithEmailAndPassword(session, data.email, data.password).then(async(response) => {
+            const token = await response.user.getIdToken();
+            Cookies.set("token", token, { expires: 2, secure: true, sameSite: "strict" });
+            Swal.fire({
+              icon: 'success',
+              title: 'Login berhasil',
+              text: 'Selamat datang di Sadana Administration Area',
+              preConfirm: () => {
+                checkSession();
+                navigate('/', { replace: true });
+              }
+            })
+          }).catch((error) => {
+            console.log(error);
+          });
+        }
+        else {
+          Swal.fire({
+            icon: 'warning',
+            title: 'User sudah tidak aktif',
+            text: 'Segera hubungi sales untuk aktivasi akun anda',
+          })
+        }
+      } 
     }
 
     const history = useLocation();

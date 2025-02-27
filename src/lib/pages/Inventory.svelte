@@ -1,14 +1,20 @@
 <script lang="ts">
-  import { formatRupiah, formatTimestamp } from "@app/app";
-  import { openModal } from "@app/context";
-  import { retrieveData } from "@app/firebase";
-  import ModalChange from "@lib/modals/ModalChange.svelte";
-  import ModalContainer from "@lib/components/ModalContainer.svelte";
+    import { formatRupiah, formatTimestamp } from "@app/app";
+    import { openModal } from "@app/context";
+    import { db, retrieveData } from "@app/firebase";
+    import ModalChange from "@lib/modals/ModalChange.svelte";
+    import ModalContainer from "@lib/components/ModalContainer.svelte";
+    import Swal from "sweetalert2";
+    import { deleteDoc, doc } from "firebase/firestore";
 
     let kitchens = $state<any>([]);
+    let products = $state<any>([]);
+    let categories = $state<any>([]);
     let tables = $state<any>([]);
+
     let tablename = $state("");
     let event = $state("");
+    let title = $state("");
     let submitData = $state({});
     let callbackFunction = $state(() => {});
 
@@ -20,6 +26,7 @@
             console.error("Error fetching kitchen:", error);
         }
     };
+
     const fetchTable = async () => {
         try {
             const response = await retrieveData("tables");
@@ -29,9 +36,29 @@
         }
     };
 
+    const fetchProducts = async () => {
+        try {
+            const response = await retrieveData("products");
+            products = response;
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    };
+
+    const fetchCategories = async () => {
+        try {
+            const response = await retrieveData("categories");
+            categories = response;
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+        }
+    };
+
     $effect(() => {
         fetchKitchen();
         fetchTable();
+        fetchProducts();
+        fetchCategories();
     })
 </script>
 
@@ -44,6 +71,7 @@
                     openModal("change");
                     tablename = "kitchen";
                     event = "create";
+                    title ="Tambah Persediaan (Dapur)";
                     callbackFunction = fetchKitchen;
                     submitData = {kitchen_name: "", amount: 0, price: 0, units: ""};
                 }}>
@@ -76,8 +104,40 @@
                                 <td>{kitchen.units === "pcs" ? formatRupiah(kitchen.amount * kitchen.price) : formatRupiah(kitchen.price)}</td>
                                 <td>{formatTimestamp(kitchen.createdAt.seconds)}</td>
                                 <td class="action">
-                                  <button class="btn btn-info btn-sm">Edit</button>
-                                  <button class="btn btn-danger btn-sm text-white">Delete</button>
+                                  <button class="btn btn-info btn-sm" onclick={() => {
+                                    openModal("change");
+                                    title = "Edit Persediaan (Dapur) - " + kitchen.kitchen_name;
+                                    submitData = kitchen;
+                                    event = "update";
+                                    tablename = "kitchen";
+                                    callbackFunction = fetchKitchen;
+                                  }}>Edit</button>
+                                  <button class="btn btn-danger btn-sm text-white" onclick={() => {
+                                    Swal.fire({
+                                      icon: "question",
+                                      title: "Kamu yakin?",
+                                      html: `Persediaan (Dapur) <b>${kitchen.kitchen_name}</b> akan dihapus!`,
+                                      showCancelButton: true,
+                                      preConfirm: async () => {
+                                        try {
+                                            const userRef = doc(db, "kitchen", kitchen.id);
+                                            await deleteDoc(userRef);
+                                            fetchKitchen();
+                                            Swal.fire({
+                                              icon: "success",
+                                              title: "Berhasil",
+                                              text: "Persediaan (Dapur) berhasil dihapus!",
+                                            })
+                                        } catch (error: any) {
+                                            Swal.fire({
+                                              icon: "error",
+                                              title: "Gagal",
+                                              text: error.message,
+                                            })
+                                        }
+                                      }
+                                    })
+                                  }}>Delete</button>
                                 </td>
                               </tr>
                             {/each}
@@ -104,7 +164,7 @@
                               </td>
                               <td colSpan={2}></td>
                             </tr>
-                          </tfoot>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -152,7 +212,7 @@
         </div>
     </div>
 </div>
-<ModalContainer id="change" title="Tambah Persediaan (Dapur)" size="md">
+<ModalContainer id="change" title={title} size="md">
     <ModalChange 
         data={submitData} 
         event={event} 
@@ -199,7 +259,6 @@
             }
         }
 
-        // Card lainnya memiliki width 70%
         .card:nth-child(1),
         .card:nth-child(3) {
             flex: 70%;

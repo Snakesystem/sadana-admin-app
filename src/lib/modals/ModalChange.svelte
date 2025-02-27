@@ -2,7 +2,8 @@
   import { validNumber } from "@app/app";
   import { closeModal } from "@app/context";
   import { db } from "@app/firebase";
-  import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+  import { addDoc, collection, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+  import Swal from "sweetalert2";
 
   let props = $props();
   let formData = { ...props.data, createdAt: serverTimestamp() };
@@ -12,15 +13,51 @@
     key.includes("mount") || key.includes("pric");
 
   async function onSubmit(data: any) {
-    console.log(data);
+    console.table(data);
     if(props.event === "create") {
       await addDoc(collection(db, props.tablename), data).then(async () => {
         await props.refresh();  
         closeModal("change");
-          // toast.success("Data berhasil ditambahkan", { autoClose: 1000 });
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil',
+          text: 'Data berhasil ditambahkan',
+        })
       }).catch((error) => {
-          console.log(error)
+          Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: error.message,
+          })
       })
+    } 
+    if(props.event === "update") {
+      const docRef = doc(db, props.tablename, props.data.id);
+        const existData = await getDoc(docRef);
+
+        if(existData.exists()) {
+          await updateDoc(docRef, data).then(() => {
+            closeModal("change");
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil',
+              text: 'Data berhasil diubah',
+            })
+            props.refresh();
+          }).catch((error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal',
+              text: error.message,
+            })
+          })
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: 'Data tidak ditemukan',
+          })
+        }
     }
   }
   

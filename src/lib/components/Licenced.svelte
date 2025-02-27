@@ -9,10 +9,10 @@
             <span>Snakesystem</span>
         </div>
         <div class="d-flex justify-content-center medsos gap-3">
-            <Link class="link-medsos" to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-instagram"></i></Link>
-            <Link class="link-medsos" to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-facebook"></i></Link>
-            <Link class="link-medsos" to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-linkedin"></i></Link>
-            <Link class="link-medsos" to="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-github"></i></Link>
+            <a aria-label="instagram" class="link-medsos" href="https://www.instagram.com/fery_ir.1" target="_blank"><i class="bi bi-instagram"></i></a>
+            <a aria-label="facebook" class="link-medsos" href="https://www.facebook.com/fery.irawansyah.58" target="_blank"><i class="bi bi-facebook"></i></a>
+            <a aria-label="linkedin" class="link-medsos" href="https://www.linkedin.com/in/feri-irawansyah/" target="_blank"><i class="bi bi-linkedin"></i></a>
+            <a aria-label="github" class="link-medsos" href="https://github.com/snakesystem" target="_blank"><i class="bi bi-github"></i></a>
         </div>
     </div>
 </div>

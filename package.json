@@ -29,6 +29,7 @@
     "firebase": "^11.3.1",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
-    "svelte-routing": "^2.13.0"
+    "svelte-routing": "^2.13.0",
+    "sweetalert2": "^11.17.2"
   }
 }
