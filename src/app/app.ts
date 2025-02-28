@@ -1,5 +1,8 @@
 import Cookies from "js-cookie";
 import { writable } from "svelte/store";
+import Swal from "sweetalert2";
+import { db } from "./firebase";
+import { deleteDoc, doc } from "firebase/firestore";
 
 export function getToken(): string | undefined {
   return Cookies.get("token");
@@ -119,4 +122,31 @@ export function formatTimestamp(timestamp: number) {
     month: '2-digit',
     day: '2-digit',
   });
+}
+
+export function deleteDataDocument(id: string, name: string, table: string, callback: () => void) {
+  return Swal.fire({
+    icon: "question",
+    title: "Kamu yakin?",
+    html: `Data (<b>${name}</b>) akan dihapus!`,
+    showCancelButton: true,
+    preConfirm: async () => {
+      try {
+          const userRef = doc(db, table, id);
+          await deleteDoc(userRef);
+          callback();
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: `Data (${name}) berhasil dihapus!`,
+          })
+      } catch (error: any) {
+          Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: error.message,
+          })
+      }
+    }
+  })
 }

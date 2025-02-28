@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { formatRupiah, formatTimestamp } from "@app/app";
+    import { deleteDataDocument, formatRupiah, formatTimestamp } from "@app/app";
     import { openModal } from "@app/context";
     import { db, retrieveData } from "@app/firebase";
     import ModalChange from "@lib/modals/ModalChange.svelte";
@@ -60,6 +60,7 @@
         fetchProducts();
         fetchCategories();
     })
+
 </script>
 
 <div class="inventory">
@@ -92,57 +93,34 @@
                               <th class="text-center">Last Update</th>
                               <th class="text-center">Actions</th>
                             </tr>
-                          </thead>
-                          <tbody>
-                            {#each kitchens as kitchen, index}
-                              <tr class="table-light">
-                                <td>{index + 1}</td>
-                                <td>{kitchen.kitchen_name}</td>
-                                <td>{kitchen.amount}</td>
-                                <td>{kitchen.units}</td>
-                                <td>{formatRupiah(kitchen.price)}</td>
-                                <td>{kitchen.units === "pcs" ? formatRupiah(kitchen.amount * kitchen.price) : formatRupiah(kitchen.price)}</td>
-                                <td>{formatTimestamp(kitchen.createdAt.seconds)}</td>
-                                <td class="action">
-                                  <button class="btn btn-info btn-sm" onclick={() => {
-                                    openModal("change");
-                                    title = "Edit Persediaan (Dapur) - " + kitchen.kitchen_name;
-                                    submitData = kitchen;
-                                    event = "update";
-                                    tablename = "kitchen";
-                                    callbackFunction = fetchKitchen;
-                                  }}>Edit</button>
-                                  <button class="btn btn-danger btn-sm text-white" onclick={() => {
-                                    Swal.fire({
-                                      icon: "question",
-                                      title: "Kamu yakin?",
-                                      html: `Persediaan (Dapur) <b>${kitchen.kitchen_name}</b> akan dihapus!`,
-                                      showCancelButton: true,
-                                      preConfirm: async () => {
-                                        try {
-                                            const userRef = doc(db, "kitchen", kitchen.id);
-                                            await deleteDoc(userRef);
-                                            fetchKitchen();
-                                            Swal.fire({
-                                              icon: "success",
-                                              title: "Berhasil",
-                                              text: "Persediaan (Dapur) berhasil dihapus!",
-                                            })
-                                        } catch (error: any) {
-                                            Swal.fire({
-                                              icon: "error",
-                                              title: "Gagal",
-                                              text: error.message,
-                                            })
-                                        }
-                                      }
-                                    })
-                                  }}>Delete</button>
-                                </td>
-                              </tr>
-                            {/each}
-                          </tbody>
-                          <tfoot class="table-light fw-xs">
+                        </thead>
+                        <tbody>
+                        {#each kitchens as kitchen, index}
+                            <tr class="table-light">
+                            <td>{index + 1}</td>
+                            <td>{kitchen.kitchen_name}</td>
+                            <td>{kitchen.amount}</td>
+                            <td>{kitchen.units}</td>
+                            <td>{formatRupiah(kitchen.price)}</td>
+                            <td>{kitchen.units === "pcs" ? formatRupiah(kitchen.amount * kitchen.price) : formatRupiah(kitchen.price)}</td>
+                            <td>{formatTimestamp(kitchen.createdAt.seconds)}</td>
+                            <td class="action">
+                                <button class="btn btn-info btn-sm" onclick={() => {
+                                openModal("change");
+                                title = "Edit Persediaan (Dapur) - " + kitchen.kitchen_name;
+                                submitData = kitchen;
+                                event = "update";
+                                tablename = "kitchen";
+                                callbackFunction = fetchKitchen;
+                                }}>Edit</button>
+                                <button class="btn btn-danger btn-sm text-white" onclick={() => {
+                                deleteDataDocument(kitchen.id, kitchen.kitchen_name, "kitchen", fetchKitchen)
+                                }}>Delete</button>
+                            </td>
+                            </tr>
+                        {/each}
+                        </tbody>
+                        <tfoot class="table-light fw-xs">
                             <tr>
                               <td colSpan={4} class="text-center">
                                 Total
@@ -169,10 +147,17 @@
                 </div>
             </div>
         </div>
-        <div class="card bg-gradient-info">
+        <div class="card bg-gradient-secondary">
             <div class="flex-row mb-2 card-header">
-                <span class="heading text-white fw-bold">Daftar Meja & Tamu</span>
-                <button class="btn btn-success btn-sm text-white"><span>Tambah</span><i class="bi bi-cart-plus ms-2"></i></button>
+                <span class="heading fw-bold">Daftar Meja & Tamu</span>
+                <button class="btn btn-success btn-sm text-white" onclick={() => {
+                    openModal("change");
+                    tablename = "tables";
+                    event = "create";
+                    title ="Tambah Daftar (Meja)";
+                    callbackFunction = fetchTable;
+                    submitData = {table_name: "", guest_amount: 0};
+                }}><span>Tambah</span><i class="bi bi-cart-plus ms-2"></i></button>
             </div>
             <ol class="list-group list-group-numbered">
                 {#each tables as table}
@@ -180,8 +165,8 @@
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">
                                 {table.table_name}{" "}
-                                <span class="badge bg-secondary">
-                                    Ada {table.guest_amount} Tamu
+                                <span class="badge bg-success">
+                                    {table.guest_amount} Tamu
                                 </span>
                             </div>
                             <span class="fw-xs">
@@ -189,8 +174,17 @@
                             </span>
                         </div>
                         <div class="action">
-                            <button class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i>{""}</button>
-                            <button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i>{""}</button>
+                            <button class="btn btn-warning btn-sm" onclick={() => {
+                                openModal("change");
+                                title = "Edit Daftar (Meja) - {}" + table.table_name;
+                                submitData = table;
+                                event = "update";
+                                tablename = "tables";
+                                callbackFunction = fetchTable;
+                              }}><i class="bi bi-pencil"></i>{""}</button>
+                            <button class="btn btn-danger btn-sm"onclick={() => {
+                                deleteDataDocument(table.id, table.table_name, "tables", fetchTable)
+                              }}><i class="bi bi-trash"></i>{""}</button>
                         </div>
                     </li>
                 {/each}
@@ -201,14 +195,66 @@
         <div class="card">
             <div class="flex-row mb-2 card-header">
                 <span class="heading">Persediaan (Dapur)</span>
-                <button class="btn btn-success btn-sm"><span>Tambah</span><i class="bi bi-cart-plus ms-2"></i></button>
+                <button class="btn btn-success btn-sm " ><span>Tambah</span><i class="bi bi-cart-plus ms-2"></i></button>
+            </div>
+            <div class="flex-row">
+                <div class="table-wra">
+                    <table class="table table-striped table-sm">
+                        <thead class="table-dark">
+                            <tr>
+                              <th class="text-center">#</th>
+                              <th class="text-center">Nama</th>
+                              <th class="text-center">Stock</th>
+                              <th class="text-center">Satuan</th>
+                              <th class="text-center">Harga</th>
+                              <th class="text-center">Jumlah</th>
+                              <th class="text-center">Last Update</th>
+                              <th class="text-center">Actions</th>
+                            </tr>
+                          </thead>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="card bg-gradient-secondary">
+        <div class="card bg-gradient-info">
             <div class="flex-row mb-2 card-header">
-                <soan class="heading">Persediaan (Dapur)</soan>
-                <button class="btn btn-success btn-sm"><span>Tambah</span><i class="bi bi-cart-plus ms-2"></i></button>
+                <soan class="heading text-white">Kategori (Product)</soan>
+                <button class="btn btn-success btn-sm text-white" onclick={() => {
+                    openModal("change");
+                    tablename = "categories";
+                    event = "create";
+                    title ="Tambah Daftar (Kategori)";
+                    callbackFunction = fetchCategories;
+                    submitData = {category_name: ""};
+                }}><span>Tambah</span><i class="bi bi-cart-plus ms-2"></i></button>
             </div>
+            <ol class="list-group list-group-numbered">
+                {#each categories as category}
+                    <li class="list-group-item d-flex justify-content-between align-items-start text-white">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">
+                                {category.category_name}{" "}
+                            </div>
+                            <span class="fw-xs">
+                                Tanggal di ubah {formatTimestamp(category.createdAt.seconds)}
+                            </span>
+                        </div>
+                        <div class="action">
+                            <button class="btn btn-warning btn-sm" onclick={() => {
+                                openModal("change");
+                                title = "Edit Daftar (Kategori) - " + category.category_name;
+                                submitData = category;
+                                event = "update";
+                                tablename = "categories";
+                                callbackFunction = fetchCategories;
+                              }}><i class="bi bi-pencil"></i>{""}</button>
+                            <button class="btn btn-danger btn-sm"onclick={() => {
+                                deleteDataDocument(category.id, category.category_name, "categories", fetchCategories)
+                              }}><i class="bi bi-trash"></i>{""}</button>
+                        </div>
+                    </li>
+                {/each}
+            </ol>
         </div>
     </div>
 </div>
@@ -253,7 +299,6 @@
                 background-color: transparent;
                 li {
                     background-color: transparent;
-                    color: #fff;
                     border: none;
                 }
             }
